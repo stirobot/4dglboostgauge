@@ -1,0 +1,80 @@
+#platform "GOLDELOX"
+
+// Program Skeleton 1.0 generated 1/28/2016 9:13:29 PM
+
+#inherit "4DGL_16bitColours.fnc"
+
+#inherit "VisualConst.inc"
+
+#inherit "gaugepagesConst.inc"
+
+var buf[4];
+
+func main()
+    var numx;
+    var page;
+    var boostWarn := 17;
+    var introSweepSpeed := 2;
+    setbaud(BAUD_9600);
+    com_Init(buf,5,0); //8
+    print("Starting\n") ;
+    //check for SD card...repeat forever
+    while(!media_Init())
+        putstr("Missing SD Card!");
+        pause(200);
+        gfx_Cls();
+        pause(200);
+    wend
+
+    //sweep the gauge (and show the other gauges)
+    //boost first
+    media_SetAdd(iAngularmeter1H, iAngularmeter1L);
+    var i;
+    repeat
+        i := i + introSweepSpeed;
+        media_VideoFrame(0,0,i);
+    until (i >= boostWarn*45/30);
+    media_SetAdd(iAngularmeter5H, iAngularmeter5L);
+    repeat
+        i := i + introSweepSpeed;
+        media_VideoFrame(0,0,i);
+    until (i >= 45);
+    repeat
+        i := i - introSweepSpeed;
+        media_VideoFrame(0,0,i);
+    until (i <= boostWarn*45/30);
+    media_SetAdd(iAngularmeter1H, iAngularmeter1L);
+    repeat
+        i := i - introSweepSpeed;
+        media_VideoFrame(0,0,i);
+    until (i <= 0);
+    media_VideoFrame(0,0,0);
+    //oiltemp/oilpressure   Form2
+    //
+
+    var cmd;
+    repeat
+        serout('!');    //ACK to the arduino saying it can take more data
+        if (com_Count() >= 3)
+            //print([STR]buf);  //debug print of a string of the buffer (should print 'B' and nothing else)
+            //print("\n");
+            cmd := serin();
+            if (cmd == 'B')
+                numx := serin() << 8 | serin();      //if you input 420015 (which is hex for Bnullnull21) you get an output of 21)
+                //pause (5000);
+                com_Init(buf,5,0);  //reset the buffer
+            endif
+        endif
+
+        // Angularmeter1 1.0 generated 1/29/2016 9:40:30 PM
+        //media_SetAdd(iAngularmeter1H, iAngularmeter1L) ;      // point to the Angularmeter1 image
+        if (numx >= 17) //a simple warning light...but a better option might be inverting the colors or something
+        //inverting is a better option because it would redraw the stupid circle every darn time
+        //    gfx_CircleFilled(10,10, 5, YELLOW);
+          media_SetAdd(iAngularmeter5H, iAngularmeter5L);
+        endif
+        //print the peak at this point, but bellow the "Boost" label
+        numx := (numx * 45)/30; //scale the boost 0-30 to the "ticks" of 0-45
+        media_VideoFrame(0, 0, numx) ;          // where numx is 0 to 45 (for a displayed -15 to 30)
+    forever
+endfunc
