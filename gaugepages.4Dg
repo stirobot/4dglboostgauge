@@ -84,11 +84,12 @@ func introSweep()
     pause(1000);
     gfx_Cls() ;
 
-    //oiltemp/oilpressure   Form2
-    initOilTempOilPressure();
 
-    pause(3000);
-    gfx_Cls() ;
+    //oiltemp/oilpressure   Form2
+    //initOilTempOilPressure();
+
+    //pause(3000);
+    //gfx_Cls() ;
 
     //oilTemp       //TODO: why is this all corrupted looking?
     media_SetAdd(ioilTempMeterH, ioilTempMeterL);
@@ -115,6 +116,7 @@ func introSweep()
     pause(1000);
     gfx_Cls() ;
 
+
     //oilPSI
     media_SetAdd(ioilPsiMeterH, ioilPsiMeterL);
     i :=0 ;
@@ -136,9 +138,10 @@ func introSweep()
         i := i - introSweepSpeed;
         media_VideoFrame(0,0,i);
     until (i <= 0);
-    media_VideoFrame(-6,0,0);
+    media_VideoFrame(0,0,0);
     pause(1000);
     gfx_Cls() ;
+
 
 endfunc
 
