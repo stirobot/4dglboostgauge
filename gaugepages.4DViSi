@@ -227,7 +227,7 @@ AngularMeter
     Name                         oilTempMeter
     Alias                        oilTempMeter
     Angle                        0
-    AngleOffset                  270
+    AngleOffset                  280
     Caption                      'Oil °F'
     CaptionXOffset               30
     CaptionYOffset               10
@@ -251,7 +251,7 @@ AngularMeter
     LabelsFont.Size              8
     LabelsFont.Style             [Bold,Italic]
     LabelsOffset                 28
-    Left                         -6
+    Left                         0
     Maxvalue                     300
     Minvalue                     140
     NeedleBasewidth              6
@@ -267,7 +267,7 @@ AngularMeter
     TicksMax                     15
     TicksMin                     10
     Top                          0
-    Width                        135
+    Width                        128
     OnChanged                    ''
 end
 Form
@@ -291,7 +291,7 @@ AngularMeter
     Name                         oilPsiMeter
     Alias                        oilPsiMeter
     Angle                        0
-    AngleOffset                  270
+    AngleOffset                  280
     Caption                      'Oil PSI'
     CaptionXOffset               30
     CaptionYOffset               10
@@ -419,7 +419,7 @@ AngularMeter
     Name                         redOilTempMeter
     Alias                        redOilTempMeter
     Angle                        0
-    AngleOffset                  270
+    AngleOffset                  280
     Caption                      'Oil °F'
     CaptionXOffset               30
     CaptionYOffset               10
@@ -443,7 +443,7 @@ AngularMeter
     LabelsFont.Size              8
     LabelsFont.Style             [Bold,Italic]
     LabelsOffset                 28
-    Left                         -6
+    Left                         0
     Maxvalue                     300
     Minvalue                     140
     NeedleBasewidth              6
@@ -459,7 +459,7 @@ AngularMeter
     TicksMax                     15
     TicksMin                     10
     Top                          0
-    Width                        135
+    Width                        128
     OnChanged                    ''
 end
 Form

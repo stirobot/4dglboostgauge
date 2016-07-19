@@ -86,33 +86,33 @@ func introSweep()
 
 
     //oiltemp/oilpressure   Form2
-    //initOilTempOilPressure();
+    initOilTempOilPressure();
 
-    //pause(3000);
-    //gfx_Cls() ;
+    pause(3000);
+    gfx_Cls() ;
 
     //oilTemp       //TODO: why is this all corrupted looking?
     media_SetAdd(ioilTempMeterH, ioilTempMeterL);
     i :=0 ;
     repeat
-        i := i + introSweepSpeed;
-        media_VideoFrame(-6,0,i);
+        i := i + introSweepSpeed + 4;
+        media_VideoFrame(0,0,i);
     until (i >= oilTWarn*160/300);
     media_SetAdd(iredOilTempMeterH, iredOilTempMeterL);
     repeat
-        i := i + introSweepSpeed;
-        media_VideoFrame(-6,0,i);
+        i := i + introSweepSpeed + 4;
+        media_VideoFrame(0,0,i);
     until (i >= 160);
     repeat
-        i := i - introSweepSpeed;
-        media_VideoFrame(-6,0,i);
+        i := i - introSweepSpeed - 4;
+        media_VideoFrame(0,0,i);
     until (i <= oilTWarn*160/300);
     media_SetAdd(ioilTempMeterH, ioilTempMeterL);
     repeat
-        i := i - introSweepSpeed;
+        i := i - introSweepSpeed - 4;
         media_VideoFrame(0,0,i);
     until (i <= 0);
-    media_VideoFrame(-6,0,0);
+    media_VideoFrame(0,0,0);
     pause(1000);
     gfx_Cls() ;
 
@@ -121,27 +121,26 @@ func introSweep()
     media_SetAdd(ioilPsiMeterH, ioilPsiMeterL);
     i :=0 ;
     repeat
-        i := i + introSweepSpeed;
-        media_VideoFrame(-6,0,i);
+        i := i + introSweepSpeed + 4;
+        media_VideoFrame(0,0,i);
     until (i >= oilPWarn*160/300);
     media_SetAdd(iredOilPsiMeterH, iredOilPsiMeterL);
     repeat
-        i := i + introSweepSpeed;
-        media_VideoFrame(-6,0,i);
+        i := i + introSweepSpeed + 4;
+        media_VideoFrame(0,0,i);
     until (i >= 160);
     repeat
-        i := i - introSweepSpeed;
-        media_VideoFrame(-6,0,i);
+        i := i - introSweepSpeed - 4;
+        media_VideoFrame(0,0,i);
     until (i <= oilTWarn*160/300);
     media_SetAdd(ioilPsiMeterH, ioilPsiMeterL);
     repeat
-        i := i - introSweepSpeed;
+        i := i - introSweepSpeed - 4;
         media_VideoFrame(0,0,i);
     until (i <= 0);
     media_VideoFrame(0,0,0);
     pause(1000);
     gfx_Cls() ;
-
 
 endfunc
 
