@@ -12,7 +12,7 @@
 var buf[4];
 var boostWarn := 17;
 var oilTWarn := 260;
-var oilPWarn := 10;
+var oilPWarn := 20;
 var introSweepSpeed := 2;
 func main()
     var numx;
@@ -32,29 +32,97 @@ func main()
     introSweep();
 
     var cmd;
+    var currentCmd := 'P'; //track the mode that we are in so redraws aren't unnecessary
+    var warn := 0; //Are we in a state of warning?
     repeat
         serout('!');    //ACK to the arduino saying it can take more data
         if (com_Count() >= 3)
             //print([STR]buf);  //debug print of a string of the buffer (should print 'B' and nothing else)
             //print("\n");
             cmd := serin();
+            numx := serin() << 8 | serin();
+            com_Init(buf,5,0);
+        //endif
             if (cmd == 'B')
-                numx := serin() << 8 | serin();      //if you input 420015 (which is hex for Bnullnull21) you get an output of 21)
-                //pause (5000);
-                com_Init(buf,5,0);  //reset the buffer
+                //numx := serin() << 8 | serin();
+                //com_Init(buf,5,0);
+                if (currentCmd != 'B')
+                    gfx_Cls();
+                    media_SetAdd(iboostMeterH, iboostMeterL);
+                    warn := 0;
+                    currentCmd := 'B';
+                endif
+                 //if you input 420015 (which is hex for Bnullnull21) you get an output of 21) //boost comes in as 2 digits
+                if ( (numx >= boostWarn) && (warn == 0) )
+                    media_SetAdd(iboostMeterRedH, iboostMeterRedL);
+                    warn := 1;
+                endif
+                if ( (numx < boostWarn) && (warn == 1) )
+                    media_SetAdd(iboostMeterH, iboostMeterL);
+                    warn := 0;
+                endif
+                //print the peak at this point, but bellow the label
+                numx := (numx + 15); //scale the boost 0-30 to the "ticks" of 0-45
+                media_VideoFrame(0, 0, numx) ;          // where numx is 0 to 45 (for a displayed -15 to 30)
+            endif
+            if (cmd == 'T')
+                if (currentCmd != 'T')
+                    gfx_Cls();
+                    media_SetAdd(ioilTempMeterH, ioilTempMeterL);
+                    warn := 0;
+                    currentCmd := 'T';
+                endif
+                  //oil temp comes in as up to two hex values (ex. 250 is 54nullnullFA and 300 is 54nullnull(0)12C
+                  //reset the buffer
+                if ( (numx >= oilTWarn) && (warn == 0) )
+                    media_SetAdd(iredOilTempMeterH, iredOilTempMeterL);
+                    warn := 1;
+                endif
+                if ( (numx < oilTWarn) && (warn == 1) )
+                    media_SetAdd(ioilTempMeterH, ioilTempMeterL);
+                    warn := 0;
+                endif
+                //print the peak at this point, but bellow the label
+                if (numx >= 140)
+                    numx := ( (numx - 140)); //scale the oil temp 140 to 300 in 70 ticks
+                    media_VideoFrame(0, 0, numx) ;
+                endif
+                if (numx < 140)
+                    media_VideoFrame(0,0,0);
+                endif
+            endif
+            if (cmd == 'P')
+                if (currentCmd != 'P')
+                    gfx_Cls();
+                    media_SetAdd(ioilPsiMeterH, ioilPsiMeterL);
+                    warn := 0;
+                    currentCmd := 'P';
+                endif
+                if ( (numx <= oilPWarn) && (warn == 0) )
+                    media_SetAdd(iredOilPsiMeterH, iredOilPsiMeterL);
+                    warn := 1;
+                endif
+                if ( (numx >oilPWarn) && (warn == 1) )
+                    media_SetAdd(ioilPsiMeterH, ioilPsiMeterL);
+                    warn := 0;
+                endif
+                //print the peak at this point, but bellow the label
+                numx := (numx); //scale the oil pressure to 0-120 to the "ticks" of 0-45
+                media_VideoFrame(0, 0, numx);
+            endif
+            if (cmd == 'D') //TODO: this one requires more thought because two readings will come through
+                if (currentCmd != 'D')
+                    gfx_Cls();
+                    initOilTempOilPressure();
+                    warn := 0;
+                    currentCmd := 'C';
+                endif
+                //output from the arduino will look like this: 44<psivalue><tempvalue> ex. 4478012c or D|120|300
+                //warning light stuff goes here
+                //print the peak at this point?
+                media_VideoFrame(0, 0, numx) ;          // where numx is 0 to 45 (for a displayed -15 to 30)
             endif
         endif
-
-        // boostMeter 1.0 generated 1/29/2016 9:40:30 PM
-        //media_SetAdd(iAngularmeter1H, iAngularmeter1L) ;      // point to the Angularmeter1 image
-        if (numx >= 17) //a simple warning light...but a better option might be inverting the colors or something
-        //inverting is a better option because it would redraw the stupid circle every darn time
-        //    gfx_CircleFilled(10,10, 5, YELLOW);
-          media_SetAdd(iboostMeterRedH, iboostMeterRedL);
-        endif
-        //print the peak at this point, but bellow the "Boost" label
-        numx := (numx * 45)/30; //scale the boost 0-30 to the "ticks" of 0-45
-        media_VideoFrame(0, 0, numx) ;          // where numx is 0 to 45 (for a displayed -15 to 30)
     forever
 endfunc
 
