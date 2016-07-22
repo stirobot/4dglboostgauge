@@ -1,6 +1,12 @@
 #platform "GOLDELOX"
 
 // Program Skeleton 1.0 generated 1/28/2016 9:13:29 PM
+//TODO:
+/*
+-clean up code
+-track peaks and disply
+-post data to dual display (might have to expland things to more than 2 hex numbers)
+*/
 
 #inherit "4DGL_16bitColours.fnc"
 #inherit "LedDigitsDisplayGoldelox.INC"
@@ -83,13 +89,8 @@ func main()
                     warn := 0;
                 endif
                 //print the peak at this point, but bellow the label
-                if (numx >= 140)
-                    numx := ( (numx - 140)); //scale the oil temp 140 to 300 in 70 ticks
-                    media_VideoFrame(0, 0, numx) ;
-                endif
-                if (numx < 140)
-                    media_VideoFrame(0,0,0);
-                endif
+                numx := ( (numx)); //scale the oil temp 140 to 300 in 70 ticks
+                media_VideoFrame(0, 0, numx) ;
             endif
             if (cmd == 'P')
                 if (currentCmd != 'P')

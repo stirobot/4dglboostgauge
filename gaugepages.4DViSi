@@ -182,7 +182,7 @@ StaticText
     Font.Size                    14
     Font.Style                   [Bold,Italic]
     Height                       23
-    Left                         96
+    Left                         92
     Top                          92
     Transparent                  Yes
     Width                        32
@@ -200,7 +200,7 @@ StaticText
     Font.Size                    14
     Font.Style                   [Bold,Italic]
     Height                       23
-    Left                         96
+    Left                         92
     Top                          24
     Transparent                  Yes
     Width                        27
